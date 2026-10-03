@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuis Anatomi Renal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Kuis Anatomi Renal</h1>
+  <p id="status" aria-live="polite"></p>
+</header>
+
+<main>
+  <section id="mulai">
+    <p>Pilih bab. Semua label pada gambar ditutup; tebak struktur yang bertanda <b>?</b>.</p>
+    <div id="bab"></div>
+  </section>
+
+  <section id="kuis" hidden>
+    <div class="geser"><div id="panggung"><img id="gambar" alt="Gambar anatomi dengan label tertutup" loading="lazy"></div></div>
+    <form id="form" autocomplete="off">
+      <label for="jawab">Struktur apa yang ditunjuk tanda <b>?</b></label>
+      <div class="baris">
+        <input id="jawab" type="text" required autocapitalize="off" spellcheck="false" placeholder="Ketik jawaban…">
+        <button id="periksa">Periksa</button>
+      </div>
+    </form>
+    <div id="hasil" hidden>
+      <div id="umpan"></div>
+      <button id="lanjut" type="button">Lanjut</button>
+    </div>
+  </section>
+
+  <section id="akhir" hidden>
+    <h2 id="skorAkhir"></h2>
+    <ol id="salah"></ol>
+    <button id="ulangi" type="button">Ulangi yang salah</button>
+    <button id="kembali" type="button" class="polos">Pilih bab lain</button>
+  </section>
+
+  <section id="edit" hidden>
+    <p>Mode edit: geser kotak, tarik sudut kanan-bawah untuk mengubah ukuran, lalu salin koordinat ke <code>data.js</code>.</p>
+    <div class="baris">
+      <select id="pilihGambar" aria-label="Pilih gambar"></select>
+      <button id="tambah" type="button">+ Kotak</button>
+    </div>
+    <div class="geser"><div id="panggungEdit"><img id="gambarEdit" alt=""></div></div>
+    <textarea id="koordinat" rows="10" readonly aria-label="Koordinat penutup"></textarea>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
