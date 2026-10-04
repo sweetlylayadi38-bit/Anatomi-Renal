@@ -1,0 +1,6 @@
+Taruh file musik di folder ini dengan nama:
+  lagu1.mp3
+  lagu2.mp3
+
+Nama atau jumlah lagu bisa diubah di script.js, baris "const LAGU = [...]".
+Format .mp3 paling aman untuk semua browser. Usahakan tiap file di bawah 5 MB supaya situs tetap ringan.

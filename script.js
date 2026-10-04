@@ -148,6 +148,17 @@ function modeEdit() {
   muat();
 }
 
+// ---------- musik latar: file lokal di folder musik/ (tambah lagu = tambah nama file di LAGU) ----------
+const LAGU = ['musik/lagu1.mp3', 'musik/lagu2.mp3'];
+let lagu = 0;
+const audio = $('audio');
+audio.src = LAGU[0]; // preload="none": file baru diunduh saat tombol ditekan
+audio.onplay = audio.onpause = () => $('musik').textContent = audio.paused ? 'Putar musik' : 'Jeda musik';
+// play() gagal = file belum ada atau format tidak didukung (AbortError = dijeda saat memuat, abaikan)
+const putar = () => audio.play().catch(e => { if (e.name !== 'AbortError') $('musik').textContent = `File ${LAGU[lagu]} belum ada`; });
+audio.onended = () => { lagu = (lagu + 1) % LAGU.length; audio.src = LAGU[lagu]; putar(); };
+$('musik').onclick = () => audio.paused ? putar() : audio.pause();
+
 // ---------- awal ----------
 for (const b of [...BAB, 'Semua']) {
   const soal = b === 'Semua' ? DATA : DATA.filter(q => q.bab === b);
