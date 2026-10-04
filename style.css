@@ -1,73 +1,110 @@
-/* Palet diambil dari piksel gambar latar: arang hangat, putih topeng, biru-baja sinar. Satu aksen: baja. */
-:root{--arang:#1d1a1a;--panel:#242020e6;--tulang:#ddd6c6;--topeng:#d8d0bd;--redup:#a39b8c;--baja:#9ab8c2;--garis:#ddd6c633;--keliru:#d98a80;--r:8px}
-*{box-sizing:border-box}
-body{margin:0;font:16px/1.5 system-ui,sans-serif;color:var(--tulang);background:var(--arang)}
-/* latar: lapisan fixed sendiri (bukan background-attachment:fixed) supaya scroll tetap mulus di HP */
-body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(#1d1a1a59,#1d1a1a59),url(images/bg.webp) center top/cover}
-header{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;justify-content:space-between;padding:14px 16px;background:#1d1a1acc;border-bottom:1px solid var(--garis)}
-h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-weight:500;letter-spacing:.02em;margin:0}
-h1{font-size:1.2rem}
-h2{font-size:1.5rem;margin-bottom:12px}
-#status{margin:0;color:var(--redup);font-variant-numeric:tabular-nums}
-main{max-width:1000px;margin:16px auto;padding:16px;background:var(--panel);border:1px solid var(--garis);border-radius:var(--r)}
-[hidden]{display:none!important}
-
-/* layar lebar: sosok tampil utuh di kanan; panel menepi ke kiri kecuali saat kuis/edit butuh ruang */
-@media (min-width:900px){
-  body::before{background:linear-gradient(90deg,var(--arang),#1d1a1a00 45%) right top/56.3vh 100% no-repeat,url(images/bg.webp) right top/auto 100% no-repeat,var(--arang)}
-  main{margin-left:clamp(16px,5vw,72px);max-width:min(640px,calc(100vw - 56vh - 96px))}
-  main.kuis,main.edit{margin-left:auto;max-width:1000px}
+/* Semua warna, jarak, dan radius lewat token di :root. Tidak ada hex di luar blok ini. */
+:root{
+  /* warna (diambil dari gambar latar; merah jubah sengaja tidak dipakai di komponen) */
+  --bg:#0b0a0c;
+  --surface:rgb(18 16 18 / .72);
+  --border:rgb(201 166 107 / .28);
+  --text:#ece5d8;
+  --text-dim:#a89b8c;
+  --accent:#c9a66b;
+  --accent-ink:#14110c;
+  --cool:#8fa9b1;
+  --ok:#8fb59a;
+  --bad:#c98a7a;
+  --paper:#f4efe4;
+  --field:rgb(0 0 0 / .35);
+  --shade-top:rgb(11 10 12 / .55);
+  --shade-bottom:rgb(11 10 12 / .9);
+  --edit-fill:rgb(201 166 107 / .6);
+  --bg-pos:center top;
+  /* tipografi */
+  --font-display:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --font-body:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --fs-sm:.875rem;--fs-md:1rem;--fs-lg:1.25rem;--fs-xl:clamp(1.6rem,4vw,2.4rem);
+  /* jarak, radius, gerak */
+  --sp-1:.5rem;--sp-2:1rem;--sp-3:1.5rem;--sp-4:2.5rem;
+  --radius:10px;
+  --ease:180ms ease-out;
+  --tap:44px;
 }
+@media (min-width:900px){:root{--bg-pos:center 20%}} /* layar lebar: wajah topeng tetap terlihat */
 
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;padding:0 var(--sp-1);font:var(--fs-md)/1.5 var(--font-body);color:var(--text);background:var(--bg)}
+/* latar: lapisan fixed sendiri (bukan background-attachment:fixed) supaya scroll mulus di HP */
+body::before,body::after{content:"";position:fixed;inset:0;z-index:-1}
+body::before{background:var(--bg) url(images/bg.webp) var(--bg-pos)/cover no-repeat}
+body::after{background:linear-gradient(var(--shade-top),var(--shade-bottom))}
+
+header,main{max-width:720px;margin-inline:auto}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--sp-1) var(--sp-2);padding:var(--sp-3) var(--sp-1) var(--sp-2)}
+h1,h2{font-family:var(--font-display);font-weight:500;margin:0;color:var(--text)}
+h1{flex:1 1 100%;font-size:var(--fs-xl);line-height:1.15}
+h2{font-size:var(--fs-lg);margin-bottom:var(--sp-2)}
+#status{margin:0;font-size:var(--fs-sm);color:var(--text-dim);font-variant-numeric:tabular-nums}
+main{margin-bottom:var(--sp-4);padding:var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+p{margin:0 0 var(--sp-2)}
+
+/* tombol: dasar = sekunder (transparan); utama = emas */
 button,input,select,textarea{font:inherit}
-button{padding:10px 18px;border:1px solid var(--topeng);border-radius:var(--r);background:var(--topeng);color:var(--arang);font-weight:600;cursor:pointer;transition:transform .12s,opacity .12s}
-button:hover{opacity:.9}
-button:active{transform:scale(.97)}
-button:disabled{background:none;color:var(--redup);border-color:var(--garis);cursor:not-allowed;opacity:1}
-#pemutar{display:flex;gap:8px}
-button.ikon{display:grid;place-items:center;width:40px;height:40px;padding:0;border-radius:50%;background:var(--arang);color:var(--tulang);border-color:var(--garis)}
+button{min-height:var(--tap);padding:0 var(--sp-3);border:1px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--text);font-weight:600;cursor:pointer;transition:color var(--ease),border-color var(--ease),transform var(--ease)}
+button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+button:active:not(:disabled){transform:scale(.98)}
+button:disabled{opacity:.45;cursor:not-allowed}
+#periksa,#ulangi{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#periksa:hover:not(:disabled),#ulangi:hover{color:var(--accent-ink);filter:brightness(1.08);transform:translateY(-1px)}
+button.polos{border-color:transparent;color:var(--cool);font-weight:400;text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#pemutar{display:flex;gap:var(--sp-1)}
+button.ikon{display:grid;place-items:center;width:var(--tap);padding:0;border-radius:50%;background:var(--field)}
 .ikon svg{width:18px;height:18px;fill:currentColor}
 #musik.main .ik-putar,#musik:not(.main) .ik-jeda{display:none}
-button.polos{background:none;border-color:transparent;color:var(--baja);font-weight:400;text-decoration:underline}
-:focus-visible{outline:2px solid var(--baja);outline-offset:2px}
 
-#bab{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-#bab button{padding:16px 14px;text-align:left}
-#bab small{display:block;font-weight:400;opacity:.75}
+#bab{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--sp-2)}
+#bab button{padding:var(--sp-2);text-align:left}
+#bab small{display:block;font-weight:400;font-size:var(--fs-sm);color:var(--text-dim)}
 
-/* gambar bisa digeser di layar sempit supaya struktur tetap terbaca; putih karena gambar pocket book berlatar putih */
-.geser{overflow-x:auto;border-radius:var(--r);background:#fff}
+/* gambar soal: latar gading, tanpa filter; bisa digeser di layar sempit supaya label tetap terbaca */
+.geser{overflow-x:auto;padding:var(--sp-1);border-radius:var(--radius);background:var(--paper)}
 #panggung,#panggungEdit{position:relative;min-width:640px;line-height:0}
 #panggung img,#panggungEdit img{width:100%;height:auto;user-select:none;-webkit-user-drag:none}
-
-.tutup{position:absolute;background:var(--arang);border-radius:3px;transition:opacity .35s,transform .35s}
-.tutup.target{background:var(--baja);display:grid;place-items:center;line-height:1;font-weight:700;color:var(--arang);font-size:clamp(14px,2.2vw,24px)}
+.tutup{position:absolute;background:var(--bg);border-radius:3px;transition:opacity var(--ease),transform var(--ease)}
+.tutup.target{background:var(--accent);display:grid;place-items:center;line-height:1;font-weight:700;color:var(--accent-ink);font-size:clamp(14px,2.2vw,24px)}
 .tutup.target::after{content:"?"}
 .tutup.buka{opacity:0;transform:scale(1.15);pointer-events:none}
 
-form{margin-top:16px}
-.baris{display:flex;gap:8px;margin:6px 0 12px}
-#jawab,select{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--redup);border-radius:var(--r);background:#1d1a1a99;color:var(--tulang)}
-#jawab::placeholder{color:var(--redup)}
-#jawab:disabled{border-color:var(--garis)}
-select option{color:#111}
+form{margin-top:var(--sp-2)}
+.baris{display:flex;gap:var(--sp-1);margin:var(--sp-1) 0 var(--sp-2)}
+.navigasi{justify-content:space-between;margin-bottom:0}
+#jawab,select,textarea{min-height:var(--tap);padding:0 var(--sp-2);border:1px solid var(--border);border-radius:var(--radius);background:var(--field);color:var(--text);transition:border-color var(--ease)}
+#jawab,select{flex:1;min-width:0}
+#jawab:focus,select:focus,textarea:focus{border-color:var(--accent)}
+#jawab::placeholder{color:var(--text-dim)}
+select option{color:var(--accent-ink)}
 
-#umpan{margin:12px 0}
-.navigasi{justify-content:space-between}
-.vonis{font-weight:700;font-size:1.1rem;margin:0 0 4px}
-.benar .vonis{color:var(--baja)}
-.keliru .vonis{color:var(--keliru)}
-.sumber{margin:12px 0 0;padding:12px 14px;border-left:2px solid var(--baja);background:#ddd6c60f;border-radius:0 var(--r) var(--r) 0}
-.sumber h3{margin:0 0 4px;font-size:.9rem;color:var(--baja);font-weight:600}
-.sumber p{margin:0;max-width:75ch}
-.sumber cite{display:block;margin-top:6px;font-size:.85rem;color:var(--redup);overflow-wrap:anywhere}
-a{color:var(--baja)}
+/* umpan balik: garis kiri + ikon + teks, tidak hanya warna */
+#umpan:not(:empty){margin:var(--sp-2) 0;padding-left:var(--sp-2);border-left:3px solid var(--border)}
+#umpan.benar{border-color:var(--ok)}
+#umpan.keliru{border-color:var(--bad)}
+#umpan p{margin:0}
+.vonis{font-weight:700;font-size:var(--fs-lg);margin-bottom:var(--sp-1)}
+.benar .vonis{color:var(--ok)}
+.keliru .vonis{color:var(--bad)}
+.benar .vonis::before{content:"✓ "}
+.keliru .vonis::before{content:"✕ "}
+.sumber{margin-top:var(--sp-2);padding:var(--sp-2);background:var(--field);border:1px solid var(--border);border-radius:var(--radius)}
+.sumber h3{margin:0 0 var(--sp-1);font-size:var(--fs-sm);font-weight:600;color:var(--accent)}
+.sumber cite{display:block;margin-top:var(--sp-1);font-size:var(--fs-sm);color:var(--text-dim);overflow-wrap:anywhere}
+a{color:var(--cool)}
 
-#salah{padding-left:20px}
-#salah li{margin-bottom:6px}
+#salah{padding-left:var(--sp-3)}
+#salah li{margin-bottom:var(--sp-1)}
+#akhir button{margin:0 var(--sp-1) var(--sp-1) 0}
 
 /* mode edit */
-#panggungEdit .tutup{background:#9ab8c299;border:2px solid #b3261e;cursor:move;resize:both;overflow:hidden;touch-action:none;transition:none;color:#000;font-size:12px;line-height:1.2;padding:1px 3px}
-textarea{width:100%;margin-top:12px;font:13px/1.4 ui-monospace,monospace;background:#1d1a1a99;color:var(--tulang);border:1px solid var(--garis);border-radius:var(--r)}
+#panggungEdit .tutup{background:var(--edit-fill);border:2px solid var(--bad);cursor:move;resize:both;overflow:hidden;touch-action:none;transition:none;color:var(--accent-ink);font-size:12px;line-height:1.2;padding:1px 3px}
+textarea{width:100%;margin-top:var(--sp-2);padding:var(--sp-1);font:var(--fs-sm)/1.4 ui-monospace,monospace}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

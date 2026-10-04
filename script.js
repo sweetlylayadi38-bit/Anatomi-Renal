@@ -47,7 +47,7 @@ function kotak(m, kelas) {
 }
 function tampil(nama) {
   for (const s of ['mulai', 'kuis', 'akhir', 'edit']) $(s).hidden = s !== nama;
-  document.querySelector('main').className = nama;
+  document.querySelector('main').className = nama; // kait gaya per layar
 }
 function mulai(soal) {
   antrean = soal; no = 0; jawabku = [];
@@ -87,7 +87,7 @@ function umpan() {
   if (ok) {
     teks('p', `Benar: ${q.jawaban}`, u).className = 'vonis';
   } else {
-    teks('p', 'Belum tepat', u).className = 'vonis';
+    teks('p', 'Salah', u).className = 'vonis';
     teks('p', `Jawabanmu: ${input}`, u);
     teks('p', `Jawaban yang benar: ${q.jawaban}`, u).style.fontWeight = 700;
     const a = teks('div', '', u); a.className = 'sumber';
