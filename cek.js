@@ -27,5 +27,9 @@ for (const s of ['', '   ', '???', 'constructor', 'toString', '__proto__', 'hasO
   }
 cek(norm('toString constructor') === 'tostring constructor', 'norm merusak kata seperti "constructor"');
 
+// HTML dan aset harus selalu sepasang: ketiga aset memakai ?v= yang sama
+const v = [...fs.readFileSync('index.html', 'utf8').matchAll(/(?:style\.css|data\.js|script\.js)\?v=(\d+)/g)].map(m => m[1]);
+cek(v.length === 3 && new Set(v).size === 1, 'index.html: ?v= pada style.css, data.js, script.js harus ada dan sama');
+
 console.log(salah.length ? salah.join('\n') : `OK: ${DATA.length} soal`);
 process.exit(salah.length ? 1 : 0);

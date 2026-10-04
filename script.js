@@ -152,6 +152,21 @@ function modeEdit() {
   muat();
 }
 
+// ---------- awal ----------
+for (const b of [...BAB, 'Semua']) {
+  const soal = b === 'Semua' ? DATA : DATA.filter(q => q.bab === b);
+  const t = teks('button', b, $('bab'));
+  teks('small', soal.length ? `${soal.length} soal` : 'belum tersedia', t);
+  t.disabled = !soal.length;
+  t.onclick = () => mulai(soal);
+}
+$('form').onsubmit = periksa;
+$('lanjut').onclick = () => { no++; soalBerikut(); };
+$('sebelum').onclick = () => { no--; soalBerikut(); };
+$('ulangi').onclick = () => mulai(keliru);
+$('kembali').onclick = () => { $('status').textContent = ''; tampil('mulai'); };
+if (new URLSearchParams(location.search).has('edit')) modeEdit();
+
 // gambar baru termuat: tampilkan, lalu geser ke penanda "?" (penting di layar HP)
 $('gambar').onload = () => {
   $('gambar').style.opacity = 1;
@@ -173,18 +188,3 @@ audio.onended = () => ganti(1);
 $('musik').onclick = () => audio.paused ? putar() : audio.pause();
 $('laguSebelum').onclick = () => ganti(-1);
 $('laguLanjut').onclick = () => ganti(1);
-
-// ---------- awal ----------
-for (const b of [...BAB, 'Semua']) {
-  const soal = b === 'Semua' ? DATA : DATA.filter(q => q.bab === b);
-  const t = teks('button', b, $('bab'));
-  teks('small', soal.length ? `${soal.length} soal` : 'belum tersedia', t);
-  t.disabled = !soal.length;
-  t.onclick = () => mulai(soal);
-}
-$('form').onsubmit = periksa;
-$('lanjut').onclick = () => { no++; soalBerikut(); };
-$('sebelum').onclick = () => { no--; soalBerikut(); };
-$('ulangi').onclick = () => mulai(keliru);
-$('kembali').onclick = () => { $('status').textContent = ''; tampil('mulai'); };
-if (new URLSearchParams(location.search).has('edit')) modeEdit();
