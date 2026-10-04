@@ -34,7 +34,8 @@ function benar(input, q) {
 }
 
 // ---------- kuis ----------
-let antrean = [], no = 0, skor = 0, keliru = [];
+let antrean = [], no = 0, jawabku = [], keliru = []; // jawabku[i] = {input, ok} untuk soal ke-i
+const skor = () => jawabku.filter(j => j && j.ok).length;
 
 function kotak(m, kelas) {
   const el = document.createElement('div');
@@ -46,7 +47,7 @@ function tampil(nama) {
   for (const s of ['mulai', 'kuis', 'akhir', 'edit']) $(s).hidden = s !== nama;
 }
 function mulai(soal) {
-  antrean = soal; no = 0; skor = 0; keliru = [];
+  antrean = soal; no = 0; jawabku = [];
   tampil('kuis'); soalBerikut();
 }
 function soalBerikut() {
@@ -56,26 +57,32 @@ function soalBerikut() {
   $('gambar').src = q.gambar;
   for (const m of q.masks) p.append(kotak(m, m === q.target ? 'target' : ''));
   $('tanya').textContent = q.tanya || 'Struktur apa yang ditunjuk tanda ?';
-  $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor}`;
-  $('hasil').hidden = true;
+  $('umpan').textContent = '';
   $('jawab').value = ''; $('jawab').disabled = $('periksa').disabled = false;
-  $('jawab').focus({preventScroll: true});
+  $('sebelum').disabled = no === 0;
+  $('lanjut').textContent = no === antrean.length - 1 ? 'Selesai' : 'Berikutnya';
   p.querySelector('.target').scrollIntoView({block: 'nearest', inline: 'center'});
+  if (jawabku[no]) umpan(); // soal yang sudah dijawab: tampilkan lagi koreksinya
+  else { $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor()}`; $('jawab').focus({preventScroll: true}); }
 }
 function teks(tag, isi, induk) {
   const el = document.createElement(tag); el.textContent = isi; induk.append(el); return el;
 }
 function periksa(e) {
   e.preventDefault();
-  const q = antrean[no], input = $('jawab').value.trim(), ok = benar(input, q), u = $('umpan');
+  const input = $('jawab').value.trim();
+  jawabku[no] = {input, ok: benar(input, antrean[no])};
+  umpan();
+  $('lanjut').focus();
+}
+function umpan() {
+  const q = antrean[no], {input, ok} = jawabku[no], u = $('umpan');
   u.textContent = ''; u.className = ok ? 'benar' : 'keliru';
-  $('jawab').disabled = $('periksa').disabled = true;
+  $('jawab').value = input; $('jawab').disabled = $('periksa').disabled = true;
   $('panggung').querySelector('.target').classList.add('buka'); // buka label struktur itu
   if (ok) {
-    skor++;
     teks('p', `Benar: ${q.jawaban}`, u).className = 'vonis';
   } else {
-    keliru.push(q);
     teks('p', 'Belum tepat', u).className = 'vonis';
     teks('p', `Jawabanmu: ${input}`, u);
     teks('p', `Jawaban yang benar: ${q.jawaban}`, u).style.fontWeight = 700;
@@ -88,16 +95,15 @@ function periksa(e) {
     const c = teks('cite', s.rujukan + ' ', b);
     if (s.url) { const l = teks('a', s.url, c); l.href = s.url; l.target = '_blank'; l.rel = 'noopener'; }
   }
-  $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor}`;
-  $('hasil').hidden = false;
-  $('lanjut').focus();
+  $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor()}`;
 }
 function selesai() {
   tampil('akhir');
   $('status').textContent = '';
-  $('skorAkhir').textContent = `Skor akhir: ${skor} dari ${antrean.length}`;
+  $('skorAkhir').textContent = `Skor akhir: ${skor()} dari ${antrean.length}`;
   $('salah').textContent = '';
-  for (const q of keliru) teks('li', `${q.jawaban} (hlm. ${q.halaman})`, $('salah'));
+  keliru = antrean.filter((q, i) => !(jawabku[i] && jawabku[i].ok)); // salah + dilewati
+  antrean.forEach((q, i) => { if (keliru.includes(q)) teks('li', `${q.jawaban} (hlm. ${q.halaman})${jawabku[i] ? '' : ', belum dijawab'}`, $('salah')); });
   $('ulangi').hidden = !keliru.length;
   if (!keliru.length) teks('li', 'Semua benar.', $('salah')).style.listStyle = 'none';
 }
@@ -152,6 +158,7 @@ for (const b of [...BAB, 'Semua']) {
 }
 $('form').onsubmit = periksa;
 $('lanjut').onclick = () => { no++; soalBerikut(); };
+$('sebelum').onclick = () => { no--; soalBerikut(); };
 $('ulangi').onclick = () => mulai(keliru);
 $('kembali').onclick = () => { $('status').textContent = ''; tampil('mulai'); };
 if (new URLSearchParams(location.search).has('edit')) modeEdit();

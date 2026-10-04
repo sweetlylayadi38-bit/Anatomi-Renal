@@ -49,6 +49,7 @@ form{margin-top:16px}
 select option{color:#111}
 
 #umpan{margin:12px 0}
+.navigasi{justify-content:space-between}
 .vonis{font-weight:700;font-size:1.1rem;margin:0 0 4px}
 .benar .vonis{color:var(--baja)}
 .keliru .vonis{color:var(--keliru)}
