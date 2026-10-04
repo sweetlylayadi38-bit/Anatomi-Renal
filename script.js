@@ -28,7 +28,9 @@ function benar(input, q) {
   const batas = teks.length < 6 ? 0 : teks.length < 12 ? 1 : 2; // toleransi salah ketik
   if (d > batas) return false;
   // salah ketik tidak boleh sama dekat/lebih dekat ke jawaban soal lain ("V. renalis" bukan "A. renalis")
-  return !DATA.some(o => norm(o.jawaban) !== norm(q.jawaban) && terdekat(teks, o) <= d);
+  // kunci yang juga dimiliki soal ini (struktur sama di gambar lain) tidak dihitung sebagai "jawaban lain"
+  const milik = new Set(kunci(q));
+  return !DATA.some(o => kunci(o).some(k => !milik.has(k) && jarak(teks, k) <= d));
 }
 
 // ---------- kuis ----------
@@ -53,6 +55,7 @@ function soalBerikut() {
   p.querySelectorAll('.tutup').forEach(e => e.remove());
   $('gambar').src = q.gambar;
   for (const m of q.masks) p.append(kotak(m, m === q.target ? 'target' : ''));
+  $('tanya').textContent = q.tanya || 'Struktur apa yang ditunjuk tanda ?';
   $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor}`;
   $('hasil').hidden = true;
   $('jawab').value = ''; $('jawab').disabled = $('periksa').disabled = false;
