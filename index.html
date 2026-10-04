@@ -14,7 +14,18 @@
 <header>
   <h1>Kuis Anatomi Renal</h1>
   <p id="status" aria-live="polite"></p>
-  <button id="musik" type="button" class="polos">Putar musik</button>
+  <div id="pemutar">
+    <button id="musik" type="button" class="ikon" aria-label="Putar musik">
+      <svg class="ik-putar" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l14 8-14 8z"/></svg>
+      <svg class="ik-jeda" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+    </button>
+    <button id="laguSebelum" type="button" class="ikon" aria-label="Lagu sebelumnya">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h3v16H5zM20 4L9 12l11 8z"/></svg>
+    </button>
+    <button id="laguLanjut" type="button" class="ikon" aria-label="Lagu berikutnya">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h3v16h-3zM4 4l11 8-11 8z"/></svg>
+    </button>
+  </div>
   <audio id="audio" preload="none"></audio>
 </header>
 

@@ -164,11 +164,15 @@ const LAGU = ['musik/lagu1.mp3', 'musik/lagu2.mp3', 'musik/lagu3.mp3'];
 let lagu = 0;
 const audio = $('audio');
 audio.src = LAGU[0]; // preload="none": file baru diunduh saat tombol ditekan
-audio.onplay = audio.onpause = () => $('musik').textContent = audio.paused ? 'Putar musik' : 'Jeda musik';
-// play() gagal = file belum ada atau format tidak didukung (AbortError = dijeda saat memuat, abaikan)
-const putar = () => audio.play().catch(e => { if (e.name !== 'AbortError') $('musik').textContent = `File ${LAGU[lagu]} belum ada`; });
-audio.onended = () => { lagu = (lagu + 1) % LAGU.length; audio.src = LAGU[lagu]; putar(); };
+const label = t => { $('musik').title = t; $('musik').setAttribute('aria-label', t); };
+audio.onplay = audio.onpause = () => { $('musik').classList.toggle('main', !audio.paused); label(audio.paused ? 'Putar musik' : 'Jeda musik'); };
+// play() gagal = file belum ada atau format tidak didukung (AbortError = dijeda/diganti saat memuat, abaikan)
+const putar = () => audio.play().catch(e => { if (e.name !== 'AbortError') label(`File ${LAGU[lagu]} belum ada`); });
+const ganti = n => { lagu = (lagu + n + LAGU.length) % LAGU.length; audio.src = LAGU[lagu]; putar(); };
+audio.onended = () => ganti(1);
 $('musik').onclick = () => audio.paused ? putar() : audio.pause();
+$('laguSebelum').onclick = () => ganti(-1);
+$('laguLanjut').onclick = () => ganti(1);
 
 // ---------- awal ----------
 for (const b of [...BAB, 'Semua']) {

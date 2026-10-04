@@ -24,6 +24,10 @@ button{padding:10px 18px;border:1px solid var(--topeng);border-radius:var(--r);b
 button:hover{opacity:.9}
 button:active{transform:scale(.97)}
 button:disabled{background:none;color:var(--redup);border-color:var(--garis);cursor:not-allowed;opacity:1}
+#pemutar{display:flex;gap:8px}
+button.ikon{display:grid;place-items:center;width:40px;height:40px;padding:0;border-radius:50%;background:var(--arang);color:var(--tulang);border-color:var(--garis)}
+.ikon svg{width:18px;height:18px;fill:currentColor}
+#musik.main .ik-putar,#musik:not(.main) .ik-jeda{display:none}
 button.polos{background:none;border-color:transparent;color:var(--baja);font-weight:400;text-decoration:underline}
 :focus-visible{outline:2px solid var(--baja);outline-offset:2px}
 
