@@ -1,6 +1,5 @@
-Taruh file musik di folder ini dengan nama:
-  lagu1.mp3
-  lagu2.mp3
+Musik latar situs. File diputar berurutan lalu diulang:
+  lagu1.mp3, lagu2.mp3, lagu3.mp3
 
-Nama atau jumlah lagu bisa diubah di script.js, baris "const LAGU = [...]".
-Format .mp3 paling aman untuk semua browser. Usahakan tiap file di bawah 5 MB supaya situs tetap ringan.
+Menambah atau mengganti lagu: taruh file di folder ini, lalu sesuaikan
+baris "const LAGU = [...]" di script.js. Pakai .mp3, usahakan di bawah 5 MB per file.

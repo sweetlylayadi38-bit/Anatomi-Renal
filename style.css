@@ -16,7 +16,7 @@ main{max-width:1000px;margin:16px auto;padding:16px;background:var(--panel);bord
 @media (min-width:900px){
   body::before{background:linear-gradient(90deg,var(--arang),#1d1a1a00 45%) right top/56.3vh 100% no-repeat,url(images/bg.webp) right top/auto 100% no-repeat,var(--arang)}
   main{margin-left:clamp(16px,5vw,72px);max-width:min(640px,calc(100vw - 56vh - 96px))}
-  main:has(#kuis:not([hidden])),main:has(#edit:not([hidden])){margin-left:auto;max-width:1000px}
+  main.kuis,main.edit{margin-left:auto;max-width:1000px}
 }
 
 button,input,select,textarea{font:inherit}

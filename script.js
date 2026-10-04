@@ -3,7 +3,7 @@ const BAB = ['Anatomy 1', 'Anatomy 2', 'Radiology 1', 'Radiology 2'];
 
 // ---------- penilaian ----------
 // Singkatan dan padanan disamakan: "Arteri renalis" = "A. renalis" = "renal artery" (lewat alias).
-const SAMA = {arteri: 'a', arteria: 'a', artery: 'a', aa: 'a', vena: 'v', vein: 'v', vv: 'v',
+const SAMA = {__proto__: null, arteri: 'a', arteria: 'a', artery: 'a', aa: 'a', vena: 'v', vein: 'v', vv: 'v',
   musculus: 'm', muskulus: 'm', muscle: 'm', otot: 'm', nervus: 'n', nerve: 'n', saraf: 'n',
   glandula: 'gl', kelenjar: 'gl', gland: 'gl'};
 const norm = s => s.toLowerCase().normalize('NFD').replace(/[^a-z0-9\s]/g, ' ')
@@ -23,7 +23,9 @@ const kunci = q => [q.jawaban, ...q.alias].map(norm);
 const terdekat = (teks, q) => Math.min(...kunci(q).map(k => jarak(teks, k)));
 
 function benar(input, q) {
-  const teks = norm(input), d = terdekat(teks, q);
+  const teks = norm(input);
+  if (!teks || teks.length > 80) return false; // kosong atau terlalu panjang: tidak perlu dihitung
+  const d = terdekat(teks, q);
   if (d === 0) return true;
   const batas = teks.length < 6 ? 0 : teks.length < 12 ? 1 : 2; // toleransi salah ketik
   if (d > batas) return false;
@@ -45,6 +47,7 @@ function kotak(m, kelas) {
 }
 function tampil(nama) {
   for (const s of ['mulai', 'kuis', 'akhir', 'edit']) $(s).hidden = s !== nama;
+  document.querySelector('main').className = nama;
 }
 function mulai(soal) {
   antrean = soal; no = 0; jawabku = [];
@@ -54,14 +57,14 @@ function soalBerikut() {
   if (no >= antrean.length) return selesai();
   const q = antrean[no], p = $('panggung');
   p.querySelectorAll('.tutup').forEach(e => e.remove());
-  $('gambar').src = q.gambar;
+  const img = $('gambar');
+  if (!img.src.endsWith(q.gambar)) { img.style.opacity = 0; img.src = q.gambar; } // disembunyikan sampai termuat
   for (const m of q.masks) p.append(kotak(m, m === q.target ? 'target' : ''));
   $('tanya').textContent = q.tanya || 'Struktur apa yang ditunjuk tanda ?';
   $('umpan').textContent = '';
   $('jawab').value = ''; $('jawab').disabled = $('periksa').disabled = false;
   $('sebelum').disabled = no === 0;
   $('lanjut').textContent = no === antrean.length - 1 ? 'Selesai' : 'Berikutnya';
-  p.querySelector('.target').scrollIntoView({block: 'nearest', inline: 'center'});
   if (jawabku[no]) umpan(); // soal yang sudah dijawab: tampilkan lagi koreksinya
   else { $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor()}`; $('jawab').focus({preventScroll: true}); }
 }
@@ -71,6 +74,7 @@ function teks(tag, isi, induk) {
 function periksa(e) {
   e.preventDefault();
   const input = $('jawab').value.trim();
+  if (!input) return;
   jawabku[no] = {input, ok: benar(input, antrean[no])};
   umpan();
   $('lanjut').focus();
@@ -148,8 +152,15 @@ function modeEdit() {
   muat();
 }
 
+// gambar baru termuat: tampilkan, lalu geser ke penanda "?" (penting di layar HP)
+$('gambar').onload = () => {
+  $('gambar').style.opacity = 1;
+  $('panggung').querySelector('.target').scrollIntoView({block: 'nearest', inline: 'center'});
+};
+$('gambar').onerror = () => { $('umpan').textContent = 'Gambar gagal dimuat. Periksa koneksi lalu muat ulang halaman.'; };
+
 // ---------- musik latar: file lokal di folder musik/ (tambah lagu = tambah nama file di LAGU) ----------
-const LAGU = ['musik/lagu1.mp3', 'musik/lagu2.mp3'];
+const LAGU = ['musik/lagu1.mp3', 'musik/lagu2.mp3', 'musik/lagu3.mp3'];
 let lagu = 0;
 const audio = $('audio');
 audio.src = LAGU[0]; // preload="none": file baru diunduh saat tombol ditekan

@@ -3,7 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Hanya file dari situs ini yang boleh dimuat/dijalankan; tanpa skrip atau gaya inline. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <title>Kuis Anatomi Renal</title>
+<link rel="icon" href="images/bg.webp">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,7 +29,7 @@
     <form id="form" autocomplete="off">
       <label for="jawab" id="tanya">Struktur apa yang ditunjuk tanda ?</label>
       <div class="baris">
-        <input id="jawab" type="text" required autocapitalize="off" spellcheck="false" placeholder="Ketik jawaban…">
+        <input id="jawab" type="text" required maxlength="80" autocapitalize="off" spellcheck="false" placeholder="Ketik jawaban…">
         <button id="periksa">Periksa</button>
       </div>
     </form>
