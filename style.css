@@ -78,6 +78,8 @@ button.ikon{display:grid;place-items:center;width:var(--tap);padding:0;border-ra
 form{margin-top:var(--sp-2)}
 .baris{display:flex;gap:var(--sp-1);margin:var(--sp-1) 0 var(--sp-2)}
 .navigasi{justify-content:space-between;margin-bottom:0}
+.navigasi+.navigasi{margin-top:0}
+.navigasi .polos{padding:0}
 #jawab,select,textarea{min-height:var(--tap);padding:0 var(--sp-2);border:1px solid var(--border);border-radius:var(--radius);background:var(--field);color:var(--text);transition:border-color var(--ease)}
 #jawab,select{flex:1;min-width:0}
 #jawab:focus,select:focus,textarea:focus{border-color:var(--accent)}

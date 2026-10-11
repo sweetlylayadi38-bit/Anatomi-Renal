@@ -9,7 +9,7 @@
 <title>Kuis Anatomi Renal</title>
 <!-- ?v=N di style.css, data.js, script.js: naikkan angkanya setiap file itu berubah, supaya browser tidak memakai versi lama dari cache. -->
 <link rel="icon" href="images/bg.webp">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <header>
@@ -50,12 +50,17 @@
       <button id="sebelum" type="button">Sebelumnya</button>
       <button id="lanjut" type="button">Berikutnya</button>
     </div>
+    <div class="baris navigasi">
+      <button id="resetSoal" type="button" class="polos">Reset soal ini</button>
+      <button id="resetSemua" type="button" class="polos">Reset semua jawaban</button>
+    </div>
   </section>
 
   <section id="akhir" hidden>
     <h2 id="skorAkhir"></h2>
     <ol id="salah"></ol>
     <button id="ulangi" type="button">Ulangi yang salah</button>
+    <button id="ulangSemua" type="button">Ulangi semua soal</button>
     <button id="kembali" type="button" class="polos">Pilih bab lain</button>
   </section>
 
@@ -70,7 +75,7 @@
   </section>
 </main>
 
-<script src="data.js?v=10"></script>
-<script src="script.js?v=10"></script>
+<script src="data.js?v=11"></script>
+<script src="script.js?v=11"></script>
 </body>
 </html>

@@ -36,7 +36,7 @@ function benar(input, q) {
 }
 
 // ---------- kuis ----------
-let antrean = [], no = 0, jawabku = [], keliru = []; // jawabku[i] = {input, ok} untuk soal ke-i
+let antrean = [], no = 0, jawabku = [], keliru = [], semua = []; // jawabku[i] = {input, ok} untuk soal ke-i; semua = soal bab yang dipilih
 const skor = () => jawabku.filter(j => j && j.ok).length;
 
 function kotak(m, kelas) {
@@ -64,6 +64,7 @@ function soalBerikut() {
   $('umpan').textContent = '';
   $('jawab').value = ''; $('jawab').disabled = $('periksa').disabled = false;
   $('sebelum').disabled = no === 0;
+  $('resetSoal').disabled = true; // umpan() mengaktifkannya lagi bila soal ini sudah dijawab
   $('lanjut').textContent = no === antrean.length - 1 ? 'Selesai' : 'Berikutnya';
   if (jawabku[no]) umpan(); // soal yang sudah dijawab: tampilkan lagi koreksinya
   else { $('status').textContent = `Soal ${no + 1}/${antrean.length} · Skor ${skor()}`; $('jawab').focus({preventScroll: true}); }
@@ -83,6 +84,7 @@ function umpan() {
   const q = antrean[no], {input, ok} = jawabku[no], u = $('umpan');
   u.textContent = ''; u.className = ok ? 'benar' : 'keliru';
   $('jawab').value = input; $('jawab').disabled = $('periksa').disabled = true;
+  $('resetSoal').disabled = false;
   $('panggung').querySelector('.target').classList.add('buka'); // buka label struktur itu
   if (ok) {
     teks('p', `Benar: ${q.jawaban}`, u).className = 'vonis';
@@ -158,12 +160,19 @@ for (const b of [...BAB, 'Semua']) {
   const t = teks('button', b, $('bab'));
   teks('small', soal.length ? `${soal.length} soal` : 'belum tersedia', t);
   t.disabled = !soal.length;
-  t.onclick = () => mulai(soal);
+  t.onclick = () => mulai(semua = soal);
 }
 $('form').onsubmit = periksa;
 $('lanjut').onclick = () => { no++; soalBerikut(); };
 $('sebelum').onclick = () => { no--; soalBerikut(); };
 $('ulangi').onclick = () => mulai(keliru);
+$('ulangSemua').onclick = () => mulai(semua);
+// reset: satu soal (jawabannya dihapus, skor ikut turun) atau seluruh putaran ini (kembali ke soal 1)
+$('resetSoal').onclick = () => { delete jawabku[no]; soalBerikut(); };
+$('resetSemua').onclick = () => {
+  const n = jawabku.filter(Boolean).length;
+  if (n < 2 || confirm(`Reset ${n} jawaban dan mulai lagi dari soal 1?`)) mulai(antrean);
+};
 $('kembali').onclick = () => { $('status').textContent = ''; tampil('mulai'); };
 if (new URLSearchParams(location.search).has('edit')) modeEdit();
 
