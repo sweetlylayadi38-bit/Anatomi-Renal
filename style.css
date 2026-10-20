@@ -48,6 +48,7 @@ p{margin:0 0 var(--sp-2)}
 
 /* tombol: dasar = sekunder (transparan); utama = emas */
 button,input,select,textarea{font:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button{min-height:var(--tap);padding:0 var(--sp-3);border:1px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--text);font-weight:600;cursor:pointer;transition:color var(--ease),border-color var(--ease),transform var(--ease)}
 button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 button:active:not(:disabled){transform:scale(.98)}
